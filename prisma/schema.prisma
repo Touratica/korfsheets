@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Club {
+  initials String @id
+  name     String @unique
+  Team     Team[]
+
+  @@map("clubs")
+}
+
+model Team {
+  id                              String                            @id @default(cuid())
+  clubInitials                    String                            @map("club_initials")
+  designation                     String
+  Club                            Club                              @relation(fields: [clubInitials], references: [initials])
+  TeamSeasonCompetitionStatistics TeamSeasonCompetitionStatistics[]
+  HomeMatches                     Match[]                           @relation("HomeTeam")
+  AwayMatches                     Match[]                           @relation("AwayTeam")
+  MatchPlayer                     MatchPlayer[]
+
+  @@unique([designation, clubInitials])
+  @@map("teams")
+}
+
+model TeamSeasonCompetitionStatistics {
+  id               String @id @default(cuid())
+  teamId           String @map("team_id")
+  season           String
+  competition      String
+  matches          Int    @default(0)
+  wins             Int    @default(0)
+  goldenGoalWins   Int    @default(0) @map("golden_goal_wins")
+  goldenGoalLosses Int    @default(0) @map("golden_goal_losses")
+  losses           Int    @default(0)
+  goals            Int    @default(0)
+  goalsAgainst     Int    @default(0) @map("goals_against")
+  Team             Team   @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, season, competition])
+  @@map("teams_season_competition_statistics")
+}
+
+model Match {
+  id          String        @id @default(cuid())
+  season      String
+  number      Int
+  date        DateTime
+  homeTeamId  String        @map("home_team_id")
+  awayTeamId  String        @map("away_team_id")
+  HomeTeam    Team          @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  AwayTeam    Team          @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  MatchPlayer MatchPlayer[]
+
+  @@unique([season, number])
+  @@map("matches")
+}
+
+model MatchPlayer {
+  id                    String                  @id @default(cuid())
+  matchId               String                  @map("match_id")
+  playerFpcId           Int                     @map("player_fpc_id")
+  jerseyNumber          Int                     @map("jersey_number")
+  teamId                String                  @map("team_designation")
+  Match                 Match                   @relation(fields: [matchId], references: [id])
+  Player                Player                  @relation(fields: [playerFpcId], references: [fpcId])
+  Team                  Team                    @relation(fields: [teamId], references: [id])
+  MatchPlayerStatistics MatchPlayerStatistics[]
+
+  @@unique([matchId, playerFpcId])
+  @@unique([matchId, teamId, jerseyNumber])
+  @@map("match_players")
+}
+
+model MatchPlayerStatistics {
+  matchPlayerId String      @id @map("match_player_id")
+  minutes       Int         @default(0)
+  goals         Int         @default(0)
+  yellowCards   Int         @default(0) @map("yellow_cards")
+  redCards      Int         @default(0) @map("red_cards")
+  whiteCards    Int         @default(0) @map("white_cards")
+  MatchPlayer   MatchPlayer @relation(fields: [matchPlayerId], references: [id])
+
+  @@map("match_players_statistics")
+}
+
+model Player {
+  fpcId                             Int                                 @id @map("fpc_id")
+  name                              String
+  MatchPlayer                       MatchPlayer[]
+  PlayerStatistics                  PlayerStatistics[]
+  PlayerSeasonStatistics            PlayerSeasonStatistics[]
+  PlayerCompetitionStatistics       PlayerCompetitionStatistics[]
+  PlayerCompetitionSeasonStatistics PlayerCompetitionSeasonStatistics[]
+
+  @@map("players")
+}
+
+model PlayerStatistics {
+  fpcId       Int    @id @map("fpc_id")
+  minutes     Int    @default(0)
+  goals       Int    @default(0)
+  yellowCards Int    @default(0) @map("yellow_cards")
+  redCards    Int    @default(0) @map("red_cards")
+  whiteCards  Int    @default(0) @map("white_cards")
+  Player      Player @relation(fields: [fpcId], references: [fpcId])
+
+  @@map("players_statistics")
+}
+
+model PlayerCompetitionStatistics {
+  id          String @id @default(cuid())
+  fpcId       Int    @map("fpc_id")
+  competition String
+  minutes     Int    @default(0)
+  goals       Int    @default(0)
+  yellowCards Int    @default(0) @map("yellow_cards")
+  redCards    Int    @default(0) @map("red_cards")
+  whiteCards  Int    @default(0) @map("white_cards")
+  Player      Player @relation(fields: [fpcId], references: [fpcId])
+
+  @@unique([fpcId, competition])
+  @@map("players_competition_statistics")
+}
+
+model PlayerSeasonStatistics {
+  id          String @id @default(cuid())
+  fpcId       Int    @map("fpc_id")
+  season      String
+  minutes     Int    @default(0)
+  goals       Int    @default(0)
+  yellowCards Int    @default(0) @map("yellow_cards")
+  redCards    Int    @default(0) @map("red_cards")
+  whiteCards  Int    @default(0) @map("white_cards")
+  Player      Player @relation(fields: [fpcId], references: [fpcId])
+
+  @@unique([fpcId, season])
+  @@map("players_season_statistics")
+}
+
+model PlayerCompetitionSeasonStatistics {
+  id          String @id @default(cuid())
+  fpcId       Int    @map("fpc_id")
+  competition String
+  season      String
+  minutes     Int    @default(0)
+  goals       Int    @default(0)
+  yellowCards Int    @default(0) @map("yellow_cards")
+  redCards    Int    @default(0) @map("red_cards")
+  whiteCards  Int    @default(0) @map("white_cards")
+  Player      Player @relation(fields: [fpcId], references: [fpcId])
+
+  @@unique([fpcId, competition, season])
+  @@map("players_competition_season_statistics")
+}
