@@ -2,11 +2,22 @@ import { updatePlayerStatistics } from "@/app/api/player/statistics/update/route
 import prisma from "@/lib/prisma";
 import { MatchPlayerStatistics, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { updateMatchPlayerStatistics } from "../update/route";
 
 export async function createMatchPlayerStatistics(
   matchPlayerStatistics: MatchPlayerStatistics
 ): Promise<MatchPlayerStatistics> {
   try {
+    const existingMatchPlayerStatistics =
+      await prisma.matchPlayerStatistics.findUnique({
+        where: {
+          matchPlayerId: matchPlayerStatistics.matchPlayerId,
+        },
+      });
+
+    if (existingMatchPlayerStatistics)
+      return updateMatchPlayerStatistics(matchPlayerStatistics);
+
     const upsertedMatchPlayerStatistics =
       await prisma.matchPlayerStatistics.create({
         data: matchPlayerStatistics,
@@ -20,9 +31,7 @@ export async function createMatchPlayerStatistics(
     //     Code: P2002
     //     Message: Unique constraint failed on the fields: (`matchPlayerId`)
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")
-      return prisma.matchPlayerStatistics.findUniqueOrThrow({
-        where: { matchPlayerId: matchPlayerStatistics.matchPlayerId },
-      });
+      return updateMatchPlayerStatistics(matchPlayerStatistics);
     throw e;
   }
 }

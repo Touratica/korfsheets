@@ -30,17 +30,17 @@ export async function updatePlayerStatistics(
     });
   }
 
-  playerStatistics.minutes += matchPlayerStatistics.minutes;
-  playerStatistics.goals += matchPlayerStatistics.goals;
-  playerStatistics.yellowCards += matchPlayerStatistics.yellowCards;
-  playerStatistics.redCards += matchPlayerStatistics.redCards;
-  playerStatistics.whiteCards += matchPlayerStatistics.whiteCards;
-
   return await prisma.playerStatistics.update({
     where: {
       fpcId: matchPlayer.playerFpcId,
     },
-    data: playerStatistics,
+    data: {
+      minutes: { increment: matchPlayerStatistics.minutes },
+      goals: { increment: matchPlayerStatistics.goals },
+      yellowCards: { increment: matchPlayerStatistics.yellowCards },
+      redCards: { increment: matchPlayerStatistics.redCards },
+      whiteCards: { increment: matchPlayerStatistics.whiteCards },
+    },
   });
 }
 

@@ -2,7 +2,9 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function getTeamByName(name: string) {
-  const [clubInitials, designation] = name.split(" ");
+  let [clubInitials, designation] = name.split(" ");
+
+  if (!designation) designation = "A";
 
   const team = await prisma.team.findUnique({
     where: {
