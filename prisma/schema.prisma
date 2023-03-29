@@ -54,6 +54,7 @@ model Match {
   id          String        @id @default(cuid())
   season      String
   number      Int
+  competition String
   date        DateTime
   homeTeamId  String        @map("home_team_id")
   awayTeamId  String        @map("away_team_id")

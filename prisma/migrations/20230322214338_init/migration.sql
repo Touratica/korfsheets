@@ -9,8 +9,8 @@ CREATE TABLE "clubs" (
 -- CreateTable
 CREATE TABLE "teams" (
     "id" TEXT NOT NULL,
-    "designation" TEXT NOT NULL,
     "club_initials" TEXT NOT NULL,
+    "designation" TEXT NOT NULL,
 
     CONSTRAINT "teams_pkey" PRIMARY KEY ("id")
 );
@@ -21,13 +21,13 @@ CREATE TABLE "teams_season_competition_statistics" (
     "team_id" TEXT NOT NULL,
     "season" TEXT NOT NULL,
     "competition" TEXT NOT NULL,
-    "matches" INTEGER NOT NULL DEFAULT 0,
-    "wins" INTEGER NOT NULL DEFAULT 0,
-    "golden_goal_wins" INTEGER NOT NULL DEFAULT 0,
-    "golden_goal_losses" INTEGER NOT NULL DEFAULT 0,
-    "losses" INTEGER NOT NULL DEFAULT 0,
-    "goals" INTEGER NOT NULL DEFAULT 0,
-    "goals_against" INTEGER NOT NULL DEFAULT 0,
+    "matches" INTEGER NOT NULL DEFAULT 0 CHECK ("matches" >= 0),
+    "wins" INTEGER NOT NULL DEFAULT 0 CHECK ("wins" >= 0),
+    "golden_goal_wins" INTEGER NOT NULL DEFAULT 0 CHECK ("golden_goal_wins" >= 0),
+    "golden_goal_losses" INTEGER NOT NULL DEFAULT 0 CHECK ("golden_goal_losses" >= 0),
+    "losses" INTEGER NOT NULL DEFAULT 0 CHECK ("losses" >= 0),
+    "goals" INTEGER NOT NULL DEFAULT 0 CHECK ("goals" >= 0),
+    "goals_against" INTEGER NOT NULL DEFAULT 0 CHECK ("goals_against" >= 0),
 
     CONSTRAINT "teams_season_competition_statistics_pkey" PRIMARY KEY ("id")
 );
@@ -58,11 +58,11 @@ CREATE TABLE "match_players" (
 -- CreateTable
 CREATE TABLE "match_players_statistics" (
     "match_player_id" TEXT NOT NULL,
-    "minutes" INTEGER NOT NULL DEFAULT 0,
-    "goals" INTEGER NOT NULL DEFAULT 0,
-    "yellow_cards" INTEGER NOT NULL DEFAULT 0,
-    "red_cards" INTEGER NOT NULL DEFAULT 0,
-    "white_cards" INTEGER NOT NULL DEFAULT 0,
+    "minutes" INTEGER NOT NULL DEFAULT 0 CHECK ("minutes" >= 0),
+    "goals" INTEGER NOT NULL DEFAULT 0 CHECK ("goals" >= 0),
+    "yellow_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("yellow_cards" >= 0),
+    "red_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("red_cards" >= 0),
+    "white_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("white_cards" >= 0),
 
     CONSTRAINT "match_players_statistics_pkey" PRIMARY KEY ("match_player_id")
 );
@@ -78,11 +78,11 @@ CREATE TABLE "players" (
 -- CreateTable
 CREATE TABLE "players_statistics" (
     "fpc_id" INTEGER NOT NULL,
-    "minutes" INTEGER NOT NULL DEFAULT 0,
-    "goals" INTEGER NOT NULL DEFAULT 0,
-    "yellow_cards" INTEGER NOT NULL DEFAULT 0,
-    "red_cards" INTEGER NOT NULL DEFAULT 0,
-    "white_cards" INTEGER NOT NULL DEFAULT 0,
+    "minutes" INTEGER NOT NULL DEFAULT 0 CHECK ("minutes" >= 0),
+    "goals" INTEGER NOT NULL DEFAULT 0 CHECK ("goals" >= 0),
+    "yellow_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("yellow_cards" >= 0),
+    "red_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("red_cards" >= 0),
+    "white_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("white_cards" >= 0),
 
     CONSTRAINT "players_statistics_pkey" PRIMARY KEY ("fpc_id")
 );
@@ -92,11 +92,11 @@ CREATE TABLE "players_competition_statistics" (
     "id" TEXT NOT NULL,
     "fpc_id" INTEGER NOT NULL,
     "competition" TEXT NOT NULL,
-    "minutes" INTEGER NOT NULL DEFAULT 0,
-    "goals" INTEGER NOT NULL DEFAULT 0,
-    "yellow_cards" INTEGER NOT NULL DEFAULT 0,
-    "red_cards" INTEGER NOT NULL DEFAULT 0,
-    "white_cards" INTEGER NOT NULL DEFAULT 0,
+    "minutes" INTEGER NOT NULL DEFAULT 0 CHECK ("minutes" >= 0),
+    "goals" INTEGER NOT NULL DEFAULT 0 CHECK ("goals" >= 0),
+    "yellow_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("yellow_cards" >= 0),
+    "red_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("red_cards" >= 0),
+    "white_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("white_cards" >= 0),
 
     CONSTRAINT "players_competition_statistics_pkey" PRIMARY KEY ("id")
 );
@@ -106,11 +106,11 @@ CREATE TABLE "players_season_statistics" (
     "id" TEXT NOT NULL,
     "fpc_id" INTEGER NOT NULL,
     "season" TEXT NOT NULL,
-    "minutes" INTEGER NOT NULL DEFAULT 0,
-    "goals" INTEGER NOT NULL DEFAULT 0,
-    "yellow_cards" INTEGER NOT NULL DEFAULT 0,
-    "red_cards" INTEGER NOT NULL DEFAULT 0,
-    "white_cards" INTEGER NOT NULL DEFAULT 0,
+    "minutes" INTEGER NOT NULL DEFAULT 0 CHECK ("minutes" >= 0),
+    "goals" INTEGER NOT NULL DEFAULT 0 CHECK ("goals" >= 0),
+    "yellow_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("yellow_cards" >= 0),
+    "red_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("red_cards" >= 0),
+    "white_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("white_cards" >= 0),
 
     CONSTRAINT "players_season_statistics_pkey" PRIMARY KEY ("id")
 );
@@ -121,11 +121,11 @@ CREATE TABLE "players_competition_season_statistics" (
     "fpc_id" INTEGER NOT NULL,
     "competition" TEXT NOT NULL,
     "season" TEXT NOT NULL,
-    "minutes" INTEGER NOT NULL DEFAULT 0,
-    "goals" INTEGER NOT NULL DEFAULT 0,
-    "yellow_cards" INTEGER NOT NULL DEFAULT 0,
-    "red_cards" INTEGER NOT NULL DEFAULT 0,
-    "white_cards" INTEGER NOT NULL DEFAULT 0,
+    "minutes" INTEGER NOT NULL DEFAULT 0 CHECK ("minutes" >= 0),
+    "goals" INTEGER NOT NULL DEFAULT 0 CHECK ("goals" >= 0),
+    "yellow_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("yellow_cards" >= 0),
+    "red_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("red_cards" >= 0),
+    "white_cards" INTEGER NOT NULL DEFAULT 0 CHECK ("white_cards" >= 0),
 
     CONSTRAINT "players_competition_season_statistics_pkey" PRIMARY KEY ("id")
 );

@@ -12,6 +12,19 @@ import { createMatchPlayer } from "@/app/api/match/player/create/route";
 import { createMatchPlayerStatistics } from "@/app/api/match/player/statistics/create/route";
 import { getTeamByName } from "../teams/[name]/route";
 
+function getCompetitionFromMatchCode(matchCode: string): string {
+  switch (matchCode.slice(0, 2)) {
+    case "CN":
+      return matchCode.slice(0, 3);
+
+    case "TP":
+      return "TP";
+
+    default:
+      throw new Error("Invalid match code");
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const file = (await req.formData()).get("file") as File;
@@ -24,6 +37,9 @@ export async function POST(req: NextRequest) {
       const match: Omit<Match, "id"> = {
         season: worksheet.getCell("F2").value as string,
         number: worksheet.getCell("S2").value as number,
+        competition: getCompetitionFromMatchCode(
+          worksheet.getCell("T2").result as string
+        ),
         date: worksheet.getCell("F3").result as Date,
         homeTeamId: (
           await getTeamByName(worksheet.getCell("A6").result as string)
