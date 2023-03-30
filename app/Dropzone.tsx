@@ -16,7 +16,7 @@ export default function Dropzone() {
       body: formData,
     });
 
-    if (response.status === 200) {
+    if (response.ok) {
       setMessage("Upload successful!");
     } else {
       setMessage("Upload failed!");
