@@ -2,9 +2,8 @@ import { Worksheet } from "exceljs";
 
 export default interface ImportStrategy {
   /**
-   *
-   * @param worksheet The worksheet to import
-   * @returns
+   * @abstract
+   * @param {Worksheet} worksheet The worksheet to import
    */
   import: (worksheet: Worksheet) => Promise<void>;
 }

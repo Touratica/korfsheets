@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
       const importContext = new ImportContext(new LastVersionStrategy());
 
-      importContext.import(worksheet);
+      await importContext.import(worksheet);
     });
 
     return NextResponse.json({ message: "ok" });

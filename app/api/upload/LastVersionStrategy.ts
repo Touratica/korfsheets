@@ -25,7 +25,13 @@ function getCompetitionFromMatchCode(matchCode: string): string {
   }
 }
 
+/** This strategy is used to import match sheet made after Nov 29, 2022. */
 export default class LastVersionStrategy implements ImportStrategy {
+  /**
+   * Import a match sheet made after Nov 29, 2022.
+   * @override
+   * @param worksheet The worksheet to import
+   */
   public async import(worksheet: Worksheet): Promise<void> {
     const match: Omit<Match, "id"> = {
       season: worksheet.getCell("F2").value as string,

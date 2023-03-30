@@ -27,11 +27,11 @@ export async function createMatchPlayer(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { matchId, playerFpcId, team, jerseyNumber } = body;
+  const { matchId, playerFpcId, teamId, jerseyNumber } = body;
   const match: Omit<MatchPlayer, "id"> = {
     matchId,
     playerFpcId,
-    team,
+    teamId,
     jerseyNumber,
   };
 
