@@ -37,13 +37,13 @@ model TeamSeasonCompetitionStatistics {
   teamId           String @map("team_id")
   season           String
   competition      String
-  matches          Int    @default(0)
-  wins             Int    @default(0)
-  goldenGoalWins   Int    @default(0) @map("golden_goal_wins")
-  goldenGoalLosses Int    @default(0) @map("golden_goal_losses")
-  losses           Int    @default(0)
-  goals            Int    @default(0)
-  goalsAgainst     Int    @default(0) @map("goals_against")
+  matches          Int    @default(0) // >= 0
+  wins             Int    @default(0) // >= 0
+  goldenGoalWins   Int    @default(0) @map("golden_goal_wins") // >= 0
+  goldenGoalLosses Int    @default(0) @map("golden_goal_losses") // >= 0
+  losses           Int    @default(0) // >= 0
+  goals            Int    @default(0) // >= 0
+  goalsAgainst     Int    @default(0) @map("goals_against") // >= 0
   Team             Team   @relation(fields: [teamId], references: [id])
 
   @@unique([teamId, season, competition])
@@ -51,16 +51,18 @@ model TeamSeasonCompetitionStatistics {
 }
 
 model Match {
-  id          String        @id @default(cuid())
-  season      String
-  number      Int
-  competition String
-  date        DateTime
-  homeTeamId  String        @map("home_team_id")
-  awayTeamId  String        @map("away_team_id")
-  HomeTeam    Team          @relation("HomeTeam", fields: [homeTeamId], references: [id])
-  AwayTeam    Team          @relation("AwayTeam", fields: [awayTeamId], references: [id])
-  MatchPlayer MatchPlayer[]
+  id            String        @id @default(cuid())
+  season        String
+  number        Int
+  competition   String
+  date          DateTime
+  homeTeamId    String        @map("home_team_id")
+  awayTeamId    String        @map("away_team_id")
+  homeTeamScore Int           @map("home_team_score") // >= 0
+  awayTeamScore Int           @map("away_team_score") // >= 0
+  HomeTeam      Team          @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  AwayTeam      Team          @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  MatchPlayer   MatchPlayer[]
 
   @@unique([season, number])
   @@map("matches")
@@ -84,11 +86,11 @@ model MatchPlayer {
 
 model MatchPlayerStatistics {
   matchPlayerId String      @id @map("match_player_id")
-  minutes       Int         @default(0)
-  goals         Int         @default(0)
-  yellowCards   Int         @default(0) @map("yellow_cards")
-  redCards      Int         @default(0) @map("red_cards")
-  whiteCards    Int         @default(0) @map("white_cards")
+  minutes       Int         @default(0) // >= 0
+  goals         Int         @default(0) // >= 0
+  yellowCards   Int         @default(0) @map("yellow_cards") // >= 0
+  redCards      Int         @default(0) @map("red_cards") // >= 0
+  whiteCards    Int         @default(0) @map("white_cards") // >= 0
   MatchPlayer   MatchPlayer @relation(fields: [matchPlayerId], references: [id])
 
   @@map("match_players_statistics")
@@ -108,11 +110,11 @@ model Player {
 
 model PlayerStatistics {
   fpcId       Int    @id @map("fpc_id")
-  minutes     Int    @default(0)
-  goals       Int    @default(0)
-  yellowCards Int    @default(0) @map("yellow_cards")
-  redCards    Int    @default(0) @map("red_cards")
-  whiteCards  Int    @default(0) @map("white_cards")
+  minutes     Int    @default(0) // >= 0
+  goals       Int    @default(0) // >= 0
+  yellowCards Int    @default(0) @map("yellow_cards") // >= 0
+  redCards    Int    @default(0) @map("red_cards") // >= 0
+  whiteCards  Int    @default(0) @map("white_cards") // >= 0
   Player      Player @relation(fields: [fpcId], references: [fpcId])
 
   @@map("players_statistics")
@@ -122,11 +124,11 @@ model PlayerCompetitionStatistics {
   id          String @id @default(cuid())
   fpcId       Int    @map("fpc_id")
   competition String
-  minutes     Int    @default(0)
-  goals       Int    @default(0)
-  yellowCards Int    @default(0) @map("yellow_cards")
-  redCards    Int    @default(0) @map("red_cards")
-  whiteCards  Int    @default(0) @map("white_cards")
+  minutes     Int    @default(0) // >= 0
+  goals       Int    @default(0) // >= 0
+  yellowCards Int    @default(0) @map("yellow_cards") // >= 0
+  redCards    Int    @default(0) @map("red_cards") // >= 0
+  whiteCards  Int    @default(0) @map("white_cards") // >= 0
   Player      Player @relation(fields: [fpcId], references: [fpcId])
 
   @@unique([fpcId, competition])
@@ -137,11 +139,11 @@ model PlayerSeasonStatistics {
   id          String @id @default(cuid())
   fpcId       Int    @map("fpc_id")
   season      String
-  minutes     Int    @default(0)
-  goals       Int    @default(0)
-  yellowCards Int    @default(0) @map("yellow_cards")
-  redCards    Int    @default(0) @map("red_cards")
-  whiteCards  Int    @default(0) @map("white_cards")
+  minutes     Int    @default(0) // >= 0
+  goals       Int    @default(0) // >= 0
+  yellowCards Int    @default(0) @map("yellow_cards") // >= 0
+  redCards    Int    @default(0) @map("red_cards") // >= 0
+  whiteCards  Int    @default(0) @map("white_cards") // >= 0
   Player      Player @relation(fields: [fpcId], references: [fpcId])
 
   @@unique([fpcId, season])
@@ -153,11 +155,11 @@ model PlayerCompetitionSeasonStatistics {
   fpcId       Int    @map("fpc_id")
   competition String
   season      String
-  minutes     Int    @default(0)
-  goals       Int    @default(0)
-  yellowCards Int    @default(0) @map("yellow_cards")
-  redCards    Int    @default(0) @map("red_cards")
-  whiteCards  Int    @default(0) @map("white_cards")
+  minutes     Int    @default(0) // >= 0
+  goals       Int    @default(0) // >= 0
+  yellowCards Int    @default(0) @map("yellow_cards") // >= 0
+  redCards    Int    @default(0) @map("red_cards") // >= 0
+  whiteCards  Int    @default(0) @map("white_cards") // >= 0
   Player      Player @relation(fields: [fpcId], references: [fpcId])
 
   @@unique([fpcId, competition, season])
