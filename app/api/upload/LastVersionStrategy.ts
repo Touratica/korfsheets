@@ -11,6 +11,7 @@ import { createMatch } from "../match/create/route";
 import { createPlayer } from "../player/create/route";
 import { createMatchPlayer } from "../match/player/create/route";
 import { createMatchPlayerStatistics } from "../match/player/statistics/create/route";
+import { updateTeamSeasonCompetitionStatistics } from "../team/[teamId]/season/[season]/competition/[competition]/statistics/route";
 
 function getCompetitionFromMatchCode(matchCode: string): string {
   switch (matchCode.slice(0, 2)) {
@@ -34,7 +35,7 @@ export default class LastVersionStrategy implements ImportStrategy {
    */
   public async import(worksheet: Worksheet): Promise<void> {
     const match: Omit<Match, "id"> = {
-      season: worksheet.getCell("F2").value as string,
+      season: (worksheet.getCell("F2").value as string).replace(/\//g, "-"),
       number: worksheet.getCell("S2").value as number,
       competition: getCompetitionFromMatchCode(
         worksheet.getCell("T2").result as string
@@ -46,6 +47,8 @@ export default class LastVersionStrategy implements ImportStrategy {
       awayTeamId: (
         await getTeamByName(worksheet.getCell("L6").result as string)
       )?.id as string,
+      homeTeamScore: parseInt(worksheet.getCell("J47").result as string),
+      awayTeamScore: parseInt(worksheet.getCell("L47").result as string),
     };
 
     const createdMatch = await createMatch(match);
@@ -111,5 +114,14 @@ export default class LastVersionStrategy implements ImportStrategy {
         await createMatchPlayerStatistics(matchPlayerStatistics);
       }
     });
+
+    await updateTeamSeasonCompetitionStatistics(
+      createdMatch.homeTeamId,
+      createdMatch
+    );
+    await updateTeamSeasonCompetitionStatistics(
+      createdMatch.awayTeamId,
+      createdMatch
+    );
   }
 }

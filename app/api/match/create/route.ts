@@ -25,7 +25,16 @@ export async function createMatch(match: Omit<Match, "id">): Promise<Match> {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { season, number, competition, date, homeTeamId, awayTeamId } = body;
+  const {
+    season,
+    number,
+    competition,
+    date,
+    homeTeamId,
+    awayTeamId,
+    homeTeamScore,
+    awayTeamScore,
+  } = body;
   const match: Omit<Match, "id"> = {
     season,
     number,
@@ -33,6 +42,8 @@ export async function POST(req: NextRequest) {
     date,
     homeTeamId,
     awayTeamId,
+    homeTeamScore,
+    awayTeamScore,
   };
 
   const upsertedMatch = await createMatch(match);
